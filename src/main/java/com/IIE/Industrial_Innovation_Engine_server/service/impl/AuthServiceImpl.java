@@ -1,16 +1,18 @@
 package com.IIE.Industrial_Innovation_Engine_server.service.impl;
 
-import com.IIE.Industrial_Innovation_Engine_server.dto.*;
-import com.IIE.Industrial_Innovation_Engine_server.mapper.AuthMapper;
-import com.IIE.Industrial_Innovation_Engine_server.mapper.TokenMapper;
-import com.IIE.Industrial_Innovation_Engine_server.entity.User;
-import com.IIE.Industrial_Innovation_Engine_server.service.AuthService;
-import com.IIE.Industrial_Innovation_Engine_server.tools.PasswordEncryptor;
-import com.IIE.Industrial_Innovation_Engine_server.tools.TokenGenerator;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import com.IIE.Industrial_Innovation_Engine_server.dto.LoginRequest;
+import com.IIE.Industrial_Innovation_Engine_server.dto.LoginResponse;
+import com.IIE.Industrial_Innovation_Engine_server.entity.User;
+import com.IIE.Industrial_Innovation_Engine_server.mapper.AuthMapper;
+import com.IIE.Industrial_Innovation_Engine_server.mapper.TokenMapper;
+import com.IIE.Industrial_Innovation_Engine_server.service.AuthService;
+import com.IIE.Industrial_Innovation_Engine_server.tools.PasswordEncryptor;
+import com.IIE.Industrial_Innovation_Engine_server.tools.TokenGenerator;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -41,9 +43,9 @@ public class AuthServiceImpl implements AuthService {
         if (user == null || !user.getPasswd().equals(password)) {
             return LoginResponse.error("账户或密码错误");
         }
-        String user_token = TokenGenerator.generateToken();
-        tokenMapper.updateToken(user.getId(),user_token);
-        user.setToken(user_token);
-        return LoginResponse.success(user.getId(),user.getMail(), user.getUser_name(), user.getUser_role(),user_token);
+        String token = TokenGenerator.generateToken(user.getId(), user.getUserRole());
+        tokenMapper.updateToken(user.getId(), token);
+        user.setToken(token);
+        return LoginResponse.success(token, user.getId(), user.getUserName(), user.getUserRole());
     }
 }

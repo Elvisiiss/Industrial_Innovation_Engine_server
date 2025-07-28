@@ -24,5 +24,8 @@ server:
 
 
 mybatis:
+  configuration:
+    # 使用下划线转驼峰命名
+    map-underscore-to-camel-case: true
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.IIE.Industrial_Innovation_Engine_server.entity
