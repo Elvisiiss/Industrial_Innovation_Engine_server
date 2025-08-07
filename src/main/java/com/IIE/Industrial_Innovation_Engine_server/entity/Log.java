@@ -1,13 +1,11 @@
 package com.IIE.Industrial_Innovation_Engine_server.entity;
 
-import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "logs")
+
 public class Log {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
 
     private String action;

@@ -5,4 +5,5 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface TokenMapper {
     void updateToken(Long id, String token);
+    Long getIdByToken(String token);
 }

@@ -8,5 +8,8 @@
         UPDATE users SET token = #{token} WHERE id = #{id}
     </update>
 
+    <select id="getIdByToken">
+        SELECT id FROM users WHERE token = #{token}
+    </select>
 
 </mapper>

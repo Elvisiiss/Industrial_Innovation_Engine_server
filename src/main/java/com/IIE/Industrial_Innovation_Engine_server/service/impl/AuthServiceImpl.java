@@ -2,11 +2,11 @@ package com.IIE.Industrial_Innovation_Engine_server.service.impl;
 
 import java.util.Optional;
 
+import com.IIE.Industrial_Innovation_Engine_server.dto.BaseResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.IIE.Industrial_Innovation_Engine_server.dto.LoginRequest;
-import com.IIE.Industrial_Innovation_Engine_server.dto.LoginResponse;
 import com.IIE.Industrial_Innovation_Engine_server.entity.User;
 import com.IIE.Industrial_Innovation_Engine_server.mapper.AuthMapper;
 import com.IIE.Industrial_Innovation_Engine_server.mapper.TokenMapper;
@@ -29,7 +29,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public LoginResponse loginWithPassword(LoginRequest request) {
+    public BaseResponse loginWithPassword(LoginRequest request) {
         String password = PasswordEncryptor.encryptPassword(request.getPasswd());
         User user = null;
 
@@ -41,11 +41,13 @@ public class AuthServiceImpl implements AuthService {
 
         // 验证用户和密码
         if (user == null || !user.getPasswd().equals(password)) {
-            return LoginResponse.error("账户或密码错误");
+            return BaseResponse.error("账户或密码错误");
         }
         String token = TokenGenerator.generateToken(user.getId(), user.getUserRole());
         tokenMapper.updateToken(user.getId(), token);
         user.setToken(token);
-        return LoginResponse.success(token, user.getId(), user.getUserName(), user.getUserRole());
+        user.setPasswd(null);
+        user.setStatus(null);
+        return BaseResponse.success("登录成功",user);
     }
 }

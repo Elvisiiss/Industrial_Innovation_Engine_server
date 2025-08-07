@@ -10,12 +10,13 @@ import lombok.NoArgsConstructor;
 public class BaseResponse {
     private String msg;
     private String code;
+    private Object data;
 
-    public static BaseResponse success(String msg) {
-        return new BaseResponse(msg, "success");
+    public static BaseResponse success(String msg,Object data) {
+        return new BaseResponse(msg,"Success",data);
     }
 
     public static BaseResponse error(String msg) {
-        return new BaseResponse(msg, "Error");
+        return new BaseResponse(msg, "Error",null);
     }
 }

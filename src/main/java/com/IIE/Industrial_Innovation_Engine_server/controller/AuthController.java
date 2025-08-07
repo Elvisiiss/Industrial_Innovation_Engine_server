@@ -21,7 +21,7 @@ public class AuthController {
      * 登录 - 使用学号和密码
      */
     @PostMapping("/login/password")
-    public LoginResponse loginWithPassword(@RequestBody LoginRequest request) {
+    public BaseResponse loginWithPassword(@RequestBody LoginRequest request) {
         return authService.loginWithPassword(request);
     }
 
