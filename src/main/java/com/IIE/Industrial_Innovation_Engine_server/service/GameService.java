@@ -7,4 +7,8 @@ public interface GameService {
     BaseResponse getUserGames(Long id);
 
     BaseResponse getStats(Long id);
+
+    BaseResponse getPendingGames();
+
+    BaseResponse changeGameStatus(Long id, Long gameId, String status, String description);
 }

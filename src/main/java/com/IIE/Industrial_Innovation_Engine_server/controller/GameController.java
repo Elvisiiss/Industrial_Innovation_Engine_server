@@ -6,6 +6,8 @@ import com.IIE.Industrial_Innovation_Engine_server.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/games")
 @CrossOrigin(origins = "*") // 实际应用中应该限制跨域来源
@@ -33,6 +35,18 @@ public class GameController {
     }
 
     /**
+     * 获取待审核游戏
+     */
+    @GetMapping("/pending")
+    public BaseResponse getPendingGames(@RequestHeader String Token) {
+        Long id = tokenMapper.getIdByToken(Token);
+        if(id==null) {
+            return BaseResponse.error("Token错误");
+        }
+        return gameService.getPendingGames();
+    }
+
+    /**
     * 获取我的游戏的状态
     * */
     @GetMapping("/stats")
@@ -42,5 +56,23 @@ public class GameController {
             return BaseResponse.error("Token错误");
         }
         return gameService.getStats(id);
+    }
+
+    /**
+     * 修改我的游戏的状态
+     * */
+    @PatchMapping("/{gameId}/status")
+    public BaseResponse changeGameStatus(
+            @RequestHeader String Token,
+            @PathVariable Long gameId,
+            @RequestBody Map<String, String> requestBody
+    ) {
+        String status = requestBody.get("status");
+        String description = requestBody.get("description");
+        Long id = tokenMapper.getIdByToken(Token);
+        if(id==null) {
+            return BaseResponse.error("Token错误");
+        }
+        return gameService.changeGameStatus(id,gameId,status, description);
     }
 }

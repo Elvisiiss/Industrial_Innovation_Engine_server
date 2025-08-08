@@ -3,7 +3,6 @@ package com.IIE.Industrial_Innovation_Engine_server.entity;
 import lombok.Data;
 
 import java.util.List;
-import java.util.Map;
 
 @Data
 public class Game {
@@ -17,9 +16,11 @@ public class Game {
 
     private String gamePicture;
 
+    private Long gameBelong;
+
     private String status;
 
-    private Long gameBelong;
+    private String examineDescription;
 
     private List<Tag> tags;
 

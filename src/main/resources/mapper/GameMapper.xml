@@ -11,6 +11,7 @@
         <result property="gamePicture" column="game_picture"/>
         <result property="status" column="status"/>
         <result property="gameBelong" column="game_belong"/>
+        <result property="examineDescription" column="examine_description"/>
         <!-- 嵌套标签集合 -->
         <collection property="tags" ofType="com.IIE.Industrial_Innovation_Engine_server.entity.Tag">
             <id property="id" column="tag_id"/>
@@ -28,6 +29,7 @@
             g.game_picture,
             g.status,
             g.game_belong,
+            g.examine_description,
             t.id AS tag_id,
             t.tag_name,
             t.tag_description
@@ -36,5 +38,36 @@
                  LEFT JOIN tags t ON gt.tag_id = t.id
         WHERE g.game_belong = #{id}
     </select>
+
+    <select id="getPendingGames" resultMap="gameWithTagsMap">
+        SELECT
+            g.id,
+            g.game_name,
+            g.game_description,
+            g.game_url,
+            g.game_picture,
+            g.status,
+            g.game_belong,
+            g.examine_description,
+            t.id AS tag_id,
+            t.tag_name,
+            t.tag_description
+        FROM games g
+                 LEFT JOIN game_tag gt ON g.id = gt.game_id
+                 LEFT JOIN tags t ON gt.tag_id = t.id
+        WHERE g.status = 'UNAPPROVED'
+    </select>
+
+    <select id="did_it_belong_me">
+        SELECT COUNT(*)>0 FROM games WHERE game_belong = #{id} AND id = #{gameId}
+    </select>
+
+    <select id="getGameStatus">
+        SELECT status FROM games WHERE id = #{gameId}
+    </select>
+
+    <update id="changeGameStatus">
+        UPDATE games SET status = #{status}, examine_description = #{description} WHERE id = #{gameId}
+    </update>
 
 </mapper>
