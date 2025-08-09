@@ -33,7 +33,7 @@ public class GameController {
         if(id==null) {
             return BaseResponse.error("Token错误");
         }
-        return gameService.createGame(game);
+        return gameService.createGame(id, game);
     }
 
 

@@ -13,5 +13,5 @@ public interface GameService {
 
     BaseResponse changeGameStatus(Long id, Long gameId, String status, String description);
 
-    BaseResponse createGame(Game game);
+    BaseResponse createGame(Long id, Game game);
 }

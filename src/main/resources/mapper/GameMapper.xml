@@ -70,4 +70,42 @@
         UPDATE games SET status = #{status}, examine_description = #{description} WHERE id = #{gameId}
     </update>
 
+    <insert id="createGame" parameterType="com.IIE.Industrial_Innovation_Engine_server.entity.Game" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO games (
+            game_name,
+            game_description,
+            game_url,
+            game_picture,
+            game_belong,
+            status,
+            examine_description
+        ) VALUES (
+                     #{gameName},
+                     #{gameDescription},
+                     #{gameUrl},
+                     #{gamePicture},
+                     #{gameBelong},
+                     #{status},
+                     #{examineDescription}
+                 )
+    </insert>
+
+    <select id="getTagByName" resultType="com.IIE.Industrial_Innovation_Engine_server.entity.Tag">
+        SELECT * FROM tags WHERE tag_name = #{tagName}
+    </select>
+
+    <insert id="insertTag" parameterType="com.IIE.Industrial_Innovation_Engine_server.entity.Tag" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO tags (tag_name, tag_description)
+        VALUES (#{tagName}, #{tagDescription})
+    </insert>
+
+    <select id="checkTagExists" resultType="boolean">
+        SELECT COUNT(*) > 0 FROM tags WHERE id = #{tagId}
+    </select>
+
+    <insert id="insertGameTag">
+        INSERT INTO game_tag (game_id, tag_id)
+        VALUES (#{gameId}, #{tagId})
+    </insert>
+
 </mapper>
