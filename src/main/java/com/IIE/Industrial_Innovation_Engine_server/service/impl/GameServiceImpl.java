@@ -54,6 +54,11 @@ public class GameServiceImpl implements GameService {
         return BaseResponse.success("修改到"+status+"状态成功",null);
     }
 
+    @Override
+    public BaseResponse createGame(Game game) {
+        return BaseResponse.success("成功",game);
+    }
+
     private boolean canToThere(String oStatus, String status){
         if(oStatus.equals("PRIVATE") && status.equals("UNAPPROVED")) return true;
         if(oStatus.equals("UNAPPROVED") && status.equals("PUBLIC")) return true;

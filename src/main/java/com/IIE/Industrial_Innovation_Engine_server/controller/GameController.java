@@ -1,6 +1,7 @@
 package com.IIE.Industrial_Innovation_Engine_server.controller;
 
 import com.IIE.Industrial_Innovation_Engine_server.dto.*;
+import com.IIE.Industrial_Innovation_Engine_server.entity.Game;
 import com.IIE.Industrial_Innovation_Engine_server.mapper.TokenMapper;
 import com.IIE.Industrial_Innovation_Engine_server.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,20 @@ public class GameController {
         this.gameService = gameService;
         this.tokenMapper = tokenMapper;
     }
+
+    //我的游戏 - 增删改查
+    /**
+    *  增加一个我的游戏
+    * */
+    @PostMapping("")
+    public BaseResponse createGame(@RequestHeader String Token,@RequestBody Game game) {
+        Long id = tokenMapper.getIdByToken(Token);
+        if(id==null) {
+            return BaseResponse.error("Token错误");
+        }
+        return gameService.createGame(game);
+    }
+
 
     /**
      * 获取我的所有游戏
