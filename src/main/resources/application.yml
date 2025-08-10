@@ -2,7 +2,7 @@ spring:
   application:
     name: Industrial_Innovation_Engine_server
   datasource:
-    url: jdbc:mysql://10.168.89.204:3306/IIE?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&characterEncoding=utf-8
+    url: jdbc:mysql://192.168.20.250:3306/IIE?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&characterEncoding=utf-8
     username: root
     password: Huawei@311
     driver-class-name: com.mysql.cj.jdbc.Driver
