@@ -25,4 +25,8 @@ public interface GameMapper {
     void insertTag(Tag tag);
     boolean checkTagExists(Long tagId);
     void insertGameTag(@Param("gameId") Long gameId, @Param("tagId") Long tagId);
+
+    void reviewGame(Long gameId, String status, String examineDescription);
+
+    Game getGameById(Long id, Long gameId);
 }

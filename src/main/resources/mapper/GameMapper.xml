@@ -108,4 +108,27 @@
         VALUES (#{gameId}, #{tagId})
     </insert>
 
+    <update id="reviewGame">
+        UPDATE games SET status = #{status}, examine_description = #{examineDescription} WHERE id = #{gameId}
+    </update>
+
+    <select id="getGameById" resultMap="gameWithTagsMap">
+        SELECT
+            g.id,
+            g.game_name,
+            g.game_description,
+            g.game_url,
+            g.game_picture,
+            g.status,
+            g.game_belong,
+            g.examine_description,
+            t.id AS tag_id,
+            t.tag_name,
+            t.tag_description
+        FROM games g
+                 LEFT JOIN game_tag gt ON g.id = gt.game_id
+                 LEFT JOIN tags t ON gt.tag_id = t.id
+        WHERE g.game_belong = #{id} AND g.id = #{gameId}
+    </select>
+
 </mapper>

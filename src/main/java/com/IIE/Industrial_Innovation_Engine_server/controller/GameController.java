@@ -90,4 +90,54 @@ public class GameController {
         }
         return gameService.changeGameStatus(id,gameId,status, description);
     }
+
+    /**
+     * 审核
+     * */
+    @PostMapping("/{gameId}/review")
+    public BaseResponse reviewGame(
+            @RequestHeader String Token,
+            @PathVariable Long gameId,
+            @RequestBody Map<String, String> requestBody
+    ) {
+        String status = requestBody.get("status");
+        String examineDescription = requestBody.get("examineDescription");
+        Long id = tokenMapper.getIdByToken(Token);
+        if(id==null) {
+            return BaseResponse.error("Token错误");
+        }
+        return gameService.reviewGame(id,gameId,status, examineDescription);
+    }
+
+    /**
+     * 获取某个游戏的内容
+     * */
+    @GetMapping("/get/{gameId}")
+    public BaseResponse getGameById(
+            @RequestHeader String Token,
+            @PathVariable Long gameId
+    ) {
+        Long id = tokenMapper.getIdByToken(Token);
+        if(id==null) {
+            return BaseResponse.error("Token错误");
+        }
+        return gameService.getGameById(id,gameId);
+    }
+
+
+    /**
+     * 修改游戏内容
+     * */
+    @PutMapping("/{gameId}")
+    public BaseResponse updateGame(
+            @RequestHeader String Token,
+            @PathVariable Long gameId,
+            @RequestBody Game game
+    ) {
+        Long id = tokenMapper.getIdByToken(Token);
+        if(id==null) {
+            return BaseResponse.error("Token错误");
+        }
+        return gameService.updateGame(id,gameId,game);
+    }
 }

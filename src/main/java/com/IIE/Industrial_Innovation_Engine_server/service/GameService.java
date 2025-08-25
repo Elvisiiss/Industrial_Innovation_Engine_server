@@ -14,4 +14,10 @@ public interface GameService {
     BaseResponse changeGameStatus(Long id, Long gameId, String status, String description);
 
     BaseResponse createGame(Long id, Game game);
+
+    BaseResponse reviewGame(Long id, Long gameId, String status, String examineDescription);
+
+    BaseResponse getGameById(Long id, Long gameId);
+
+    BaseResponse updateGame(Long id, Long gameId, Game game);
 }

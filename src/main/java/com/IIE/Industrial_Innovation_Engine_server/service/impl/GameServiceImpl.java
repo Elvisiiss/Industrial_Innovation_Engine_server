@@ -86,6 +86,34 @@ public class GameServiceImpl implements GameService {
         }
     }
 
+    @Override
+    public BaseResponse reviewGame(Long id, Long gameId, String status, String examineDescription) {
+        if(!gameMapper.did_it_belong_me(id,gameId)){
+            return BaseResponse.error("？这游戏不属于你");
+        }
+        String oStatus = gameMapper.getGameStatus(gameId);
+        if(!canToThere(oStatus,status)){
+            return BaseResponse.error("？无法达到的游戏状态");
+        }
+        gameMapper.reviewGame(gameId,status,examineDescription);
+        return BaseResponse.success("审批成功，已" + (status.equals("PUBLIC") ? "同意" : "拒绝" ),null);
+    }
+
+    @Override
+    public BaseResponse getGameById(Long id, Long gameId) {
+        Game game = gameMapper.getGameById(id,gameId);
+        return BaseResponse.success("获取成功",game);
+    }
+
+    @Override
+    public BaseResponse updateGame(Long id, Long gameId, Game game) {
+        game.setId(gameId);
+        Game oGame = gameMapper.getGameById(id,gameId);
+        String oStatus = oGame.getStatus();
+        changeGameStatus(id,gameId,oStatus,game.getExamineDescription());
+        return null;
+    }
+
     private void processTag(Long gameId, Tag tag) {
         if (tag.getId() == null) {
             // 新标签：检查是否已存在同名标签
