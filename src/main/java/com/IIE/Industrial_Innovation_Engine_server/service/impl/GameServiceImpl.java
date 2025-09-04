@@ -3,6 +3,7 @@ package com.IIE.Industrial_Innovation_Engine_server.service.impl;
 import com.IIE.Industrial_Innovation_Engine_server.dto.BaseResponse;
 import com.IIE.Industrial_Innovation_Engine_server.dto.MyGameStatsResponse;
 import com.IIE.Industrial_Innovation_Engine_server.entity.Game;
+import com.IIE.Industrial_Innovation_Engine_server.entity.GameTagRelation;
 import com.IIE.Industrial_Innovation_Engine_server.entity.Tag;
 import com.IIE.Industrial_Innovation_Engine_server.mapper.GameMapper;
 import com.IIE.Industrial_Innovation_Engine_server.service.GameService;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -108,10 +110,33 @@ public class GameServiceImpl implements GameService {
     @Override
     public BaseResponse updateGame(Long id, Long gameId, Game game) {
         game.setId(gameId);
+        game.setGameBelong(id);
         Game oGame = gameMapper.getGameById(id,gameId);
-        String oStatus = oGame.getStatus();
-        changeGameStatus(id,gameId,oStatus,game.getExamineDescription());
-        return null;
+        if(game.getStatus().equals("PUBLIC")){
+            game.setStatus("UNAPPROVED");
+        }
+        changeGameStatus(id,gameId,game.getStatus(),game.getExamineDescription());
+//        gameMapper.updateGame();
+        // 1. 更新游戏基本信息
+        gameMapper.updateGame(game);
+
+        // 2. 删除原有标签关联
+        gameMapper.deleteGameTags(game.getId());
+
+        // 3. 准备新的标签关联数据
+        List<GameTagRelation> relations = new ArrayList<>();
+        for (Tag tag : game.getTags()) {
+            GameTagRelation relation = new GameTagRelation();
+            relation.setGameId(game.getId());
+            relation.setTagId(tag.getId());
+            relations.add(relation);
+        }
+
+        // 4. 批量插入新的标签关联
+        if (!relations.isEmpty()) {
+            gameMapper.insertGameTagsBatch(relations);
+        }
+        return BaseResponse.success("更新成功",null);
     }
 
     private void processTag(Long gameId, Tag tag) {
@@ -143,6 +168,7 @@ public class GameServiceImpl implements GameService {
         if(oStatus.equals("APPROVED") && status.equals("UNAPPROVED")) return true;
         if(oStatus.equals("PUBLIC") && status.equals("PRIVATE")) return true;
         if(oStatus.equals("UNAPPROVED") && status.equals("PRIVATE")) return true;
+        if(oStatus.equals("PUBLIC") && status.equals("UNAPPROVED")) return true;
         return false;
     }
 }

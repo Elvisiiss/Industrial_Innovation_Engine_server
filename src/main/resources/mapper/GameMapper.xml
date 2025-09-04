@@ -131,4 +131,28 @@
         WHERE g.game_belong = #{id} AND g.id = #{gameId}
     </select>
 
+    <!-- 更新游戏基本信息 -->
+    <update id="updateGame" parameterType="com.IIE.Industrial_Innovation_Engine_server.entity.Game">
+        UPDATE games
+        SET
+            game_name = #{gameName},
+            game_description = #{gameDescription},
+            game_url = #{gameUrl},
+            game_picture = #{gamePicture}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除游戏的所有标签关联 -->
+    <delete id="deleteGameTags">
+        DELETE FROM game_tag WHERE game_id = #{gameId}
+    </delete>
+
+    <!-- 批量插入游戏标签关联 -->
+    <insert id="insertGameTagsBatch" parameterType="java.util.List">
+        INSERT INTO game_tag (game_id, tag_id)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.gameId}, #{item.tagId})
+        </foreach>
+    </insert>
 </mapper>

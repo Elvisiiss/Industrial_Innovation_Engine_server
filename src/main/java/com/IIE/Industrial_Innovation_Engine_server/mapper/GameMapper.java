@@ -1,6 +1,7 @@
 package com.IIE.Industrial_Innovation_Engine_server.mapper;
 
 import com.IIE.Industrial_Innovation_Engine_server.entity.Game;
+import com.IIE.Industrial_Innovation_Engine_server.entity.GameTagRelation;
 import com.IIE.Industrial_Innovation_Engine_server.entity.Tag;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -29,4 +30,13 @@ public interface GameMapper {
     void reviewGame(Long gameId, String status, String examineDescription);
 
     Game getGameById(Long id, Long gameId);
+
+    // 更新游戏基本信息
+    void updateGame(Game game);
+
+    // 删除游戏的所有标签关联
+    void deleteGameTags(@Param("gameId") Long gameId);
+
+    // 批量插入游戏标签关联
+    void insertGameTagsBatch(@Param("list") List<GameTagRelation> relations);
 }
