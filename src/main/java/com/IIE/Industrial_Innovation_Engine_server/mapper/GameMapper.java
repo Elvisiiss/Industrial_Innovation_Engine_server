@@ -1,5 +1,7 @@
 package com.IIE.Industrial_Innovation_Engine_server.mapper;
 
+import com.IIE.Industrial_Innovation_Engine_server.dto.BaseResponse;
+import com.IIE.Industrial_Innovation_Engine_server.dto.SearchRequest;
 import com.IIE.Industrial_Innovation_Engine_server.entity.Game;
 import com.IIE.Industrial_Innovation_Engine_server.entity.GameTagRelation;
 import com.IIE.Industrial_Innovation_Engine_server.entity.Tag;
@@ -39,4 +41,8 @@ public interface GameMapper {
 
     // 批量插入游戏标签关联
     void insertGameTagsBatch(@Param("list") List<GameTagRelation> relations);
+
+    List<Game> searchGames(SearchRequest searchRequest);
+
+    void deleteGame(Long gameId);
 }

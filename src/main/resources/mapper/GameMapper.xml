@@ -58,11 +58,11 @@
         WHERE g.status = 'UNAPPROVED'
     </select>
 
-    <select id="did_it_belong_me">
+    <select id="did_it_belong_me" resultType="boolean">
         SELECT COUNT(*)>0 FROM games WHERE game_belong = #{id} AND id = #{gameId}
     </select>
 
-    <select id="getGameStatus">
+    <select id="getGameStatus" resultType="java.lang.String">
         SELECT status FROM games WHERE id = #{gameId}
     </select>
 
@@ -155,4 +155,45 @@
             (#{item.gameId}, #{item.tagId})
         </foreach>
     </insert>
+
+    <!-- 搜索游戏 -->
+    <select id="searchGames" resultMap="gameWithTagsMap" parameterType="com.IIE.Industrial_Innovation_Engine_server.dto.SearchRequest">
+        SELECT DISTINCT
+        g.id,
+        g.game_name,
+        g.game_description,
+        g.game_url,
+        g.game_picture,
+        g.status,
+        g.game_belong,
+        g.examine_description,
+        t.id AS tag_id,
+        t.tag_name,
+        t.tag_description
+        FROM games g
+        LEFT JOIN game_tag gt ON g.id = gt.game_id
+        LEFT JOIN tags t ON gt.tag_id = t.id
+        WHERE
+        g.status != 'DELETED'
+        AND (
+        g.status = 'PUBLIC'
+        OR g.game_belong = #{myId}
+        )
+        <if test="wannaMe != null and !wannaMe">
+            AND g.game_belong != #{myId}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            AND (
+            g.game_name LIKE CONCAT('%', #{keyword}, '%')
+            OR g.game_description LIKE CONCAT('%', #{keyword}, '%')
+            OR t.tag_name LIKE CONCAT('%', #{keyword}, '%')
+            OR t.tag_description LIKE CONCAT('%', #{keyword}, '%')
+            )
+        </if>
+        ORDER BY g.id
+    </select>
+
+    <delete id="deleteGame">
+        DELETE FROM games WHERE id = #{gameId}
+    </delete>
 </mapper>

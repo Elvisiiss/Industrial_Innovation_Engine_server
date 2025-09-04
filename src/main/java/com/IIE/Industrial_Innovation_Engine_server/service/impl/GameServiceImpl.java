@@ -2,6 +2,7 @@ package com.IIE.Industrial_Innovation_Engine_server.service.impl;
 
 import com.IIE.Industrial_Innovation_Engine_server.dto.BaseResponse;
 import com.IIE.Industrial_Innovation_Engine_server.dto.MyGameStatsResponse;
+import com.IIE.Industrial_Innovation_Engine_server.dto.SearchRequest;
 import com.IIE.Industrial_Innovation_Engine_server.entity.Game;
 import com.IIE.Industrial_Innovation_Engine_server.entity.GameTagRelation;
 import com.IIE.Industrial_Innovation_Engine_server.entity.Tag;
@@ -42,6 +43,7 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public BaseResponse getPendingGames() {
+
         return BaseResponse.success("获取成功",gameMapper.getPendingGames());
     }
 
@@ -90,9 +92,6 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public BaseResponse reviewGame(Long id, Long gameId, String status, String examineDescription) {
-        if(!gameMapper.did_it_belong_me(id,gameId)){
-            return BaseResponse.error("？这游戏不属于你");
-        }
         String oStatus = gameMapper.getGameStatus(gameId);
         if(!canToThere(oStatus,status)){
             return BaseResponse.error("？无法达到的游戏状态");
@@ -137,6 +136,21 @@ public class GameServiceImpl implements GameService {
             gameMapper.insertGameTagsBatch(relations);
         }
         return BaseResponse.success("更新成功",null);
+    }
+
+    @Override
+    public BaseResponse searchGames(SearchRequest searchRequest) {
+        return BaseResponse.success("获取成功",gameMapper.searchGames(searchRequest));
+    }
+
+    @Override
+    public BaseResponse deleteGame(Long id, Long gameId) {
+        if(!gameMapper.did_it_belong_me(id,gameId)){
+            return BaseResponse.error("？这游戏不属于你");
+        }
+        gameMapper.deleteGameTags(gameId);
+        gameMapper.deleteGame(gameId);
+        return BaseResponse.success("删除成功",null);
     }
 
     private void processTag(Long gameId, Tag tag) {

@@ -1,6 +1,7 @@
 package com.IIE.Industrial_Innovation_Engine_server.service;
 
 import com.IIE.Industrial_Innovation_Engine_server.dto.BaseResponse;
+import com.IIE.Industrial_Innovation_Engine_server.dto.SearchRequest;
 import com.IIE.Industrial_Innovation_Engine_server.entity.Game;
 
 
@@ -20,4 +21,8 @@ public interface GameService {
     BaseResponse getGameById(Long id, Long gameId);
 
     BaseResponse updateGame(Long id, Long gameId, Game game);
+
+    BaseResponse searchGames(SearchRequest searchRequest);
+
+    BaseResponse deleteGame(Long id, Long gameId);
 }

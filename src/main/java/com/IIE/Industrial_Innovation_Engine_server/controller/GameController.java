@@ -36,6 +36,21 @@ public class GameController {
         return gameService.createGame(id, game);
     }
 
+    /**
+     *  删除一个我的游戏
+     * */
+    @DeleteMapping("/{gameId}")
+    public BaseResponse deleteGame(
+            @RequestHeader String Token,
+            @PathVariable Long gameId
+    ) {
+        Long id = tokenMapper.getIdByToken(Token);
+        if(id==null) {
+            return BaseResponse.error("Token错误");
+        }
+        return gameService.deleteGame(id, gameId);
+    }
+
 
     /**
      * 获取我的所有游戏
@@ -139,5 +154,20 @@ public class GameController {
             return BaseResponse.error("Token错误");
         }
         return gameService.updateGame(id,gameId,game);
+    }
+
+    /**
+     * 搜索游戏
+     * */
+    @GetMapping("/search")
+    public BaseResponse searchGames(
+            @RequestHeader String Token,
+            @ModelAttribute SearchRequest searchRequest
+    ) {
+        Long id = tokenMapper.getIdByToken(Token);
+        if(id==null || !id.equals(searchRequest.getMyId())) {
+            return BaseResponse.error("Token错误");
+        }
+        return gameService.searchGames(searchRequest);
     }
 }

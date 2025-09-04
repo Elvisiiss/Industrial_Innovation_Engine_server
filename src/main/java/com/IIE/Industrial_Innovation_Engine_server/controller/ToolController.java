@@ -78,7 +78,7 @@ public class ToolController {
             pictureFile.transferTo(dest);
 
             // 6. 构建访问路径（需配合静态资源映射配置）
-            String fileUrl = "/pictures/" + fileName;
+            String fileUrl = "/api/pictures/" + fileName;
 
             return BaseResponse.success("上传成功", fileUrl);
 
